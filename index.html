@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>루아의 감정테스트💙</title>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center; /* 수직 중앙 정렬 유지 */
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      /* 글꼴 변경 */
+      font-family: 'Gowun Batang', serif;
+      /* 배경색 조정: 눈이 편하고 따뜻한 느낌의 색상 */
+      background-color: #fff0e0; /* 부드러운 복숭아/베이지 톤 유지 */
+      color: #333; /* 기본 텍스트 색상 */
+      box-sizing: border-box;
+      padding-bottom: 80px; /* 고정 버튼 영역만큼 하단 패딩 추가 */
+    }
+
+    /* Text elements that will fade */
+    .fade-element {
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      text-align: center;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    /* Class to make elements visible */
+    .fade-element.visible {
+      opacity: 1;
+    }
+
+    h1 {
+      font-size: 1.8em;
+      color: #5a3e36; /* 제목 색상 조정 */
+      margin-bottom: 30px; /* 제목과 내용 간격 추가 */
+      font-weight: bold; /* 질문 텍스트 굵기 (기본 h1보다 명시적으로) */
+    }
+
+    p {
+        font-size: 1.1em;
+        line-height: 1.6;
+    }
+
+    /* 시작/질문 페이지 버튼 컨테이너 - 위치 고정 */
+    .buttons {
+      /* margin-top: 20px; */ /* Fixed position, margin-top might not be needed for positioning */
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out 0.3s;
+      width: 100%;
+      /* 위치 고정 */
+      position: fixed;
+      bottom: 0; /* 하단에 고정 */
+      left: 0;
+      width: 100%; /* 너비 전체 */
+      background-color: #fff0e0; /* 배경색과 동일하게 설정 */
+      padding: 10px 20px; /* 패딩 추가 */
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* 상단 그림자 */
+      box-sizing: border-box; /* 패딩 포함 */
+      z-index: 1000; /* 다른 요소 위로 오도록 설정 */
+      display: flex; /* 버튼 정렬 */
+      justify-content: center; /* 가운데 정렬 */
+      align-items: center;
+      flex-wrap: wrap; /* 작은 화면에서 줄바꿈 */
+    }
+
+
+    .buttons.visible {
+        opacity: 1;
+    }
+
+    button {
+      margin: 8px;
+      padding: 12px 25px;
+      font-size: 1em;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      /* 버튼 색상 조정: 배경색과 어울리도록 */
+      background-color: #ff914d; /* 따뜻한 오렌지 톤 */
+      color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, transform 0.1s ease;
+    }
+
+    button:hover {
+      background-color: #357abd; /* 호버 시 약간 어둡게 */
+    }
+
+    button:active {
+        transform: scale(0.98);
+    }
+
+    #result {
+      font-size: 1.3em;
+      color: #333;
+      margin-top: 20px;
+      text-align: center;
+      max-width: 600px;
+      line-height: 1.6;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      margin-bottom: 80px; /* 결과 텍스트 하단에도 고정 버튼 영역만큼 패딩 추가 */
+    }
+
+    #result.visible {
+        opacity: 1;
+    }
+
+    #result .result-text-area {
+        min-height: 150px;
+        text-align: left;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        background-color: transparent;
+        box-shadow: none;
+        /* 페이지네이션 전환 애니메이션 - opacity 전환 시간 조정 */
+        transition: opacity 1.5s ease-in-out; /* 이전 0.3s에서 1.5s로 증가 */
+    }
+
+     #result .result-text-area p {
+         margin-bottom: 10px;
+         font-weight: 500; /* 일반 텍스트 굵기 조정 (질문 텍스트와 유사하게) */
+     }
+
+     #result .result-text-area strong {
+         display: block;
+         margin-bottom: 5px;
+         color: #7a5b50; /* 제목 부분 색상 조정 */
+         font-weight: bold; /* strong 태그는 더 진하게 */
+     }
+
+     #result .result-text-area hr {
+         margin: 20px 0;
+         border: 0;
+         border-top: 1px solid #e0d0c0; /* 구분선 색상 조정 */
+     }
+
+
+    #emotion-choice {
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    #emotion-choice.visible {
+        opacity: 1;
+    }
+
+    #emotion-choice h1 {
+      margin-bottom: 10px;
+    }
+
+    #emotion-choice .buttons button {
+      margin: 10px;
+      /* 감정 선택 버튼 색상 조정 */
+      background-color: #ffc107; /* 따뜻한 노란색 톤 */
+    }
+     #emotion-choice .buttons button:hover {
+      background-color: #ffb300;
+     }
+
+    /* Hide elements initially using opacity, manage display via JS */
+    /* Removed display: none here to rely on JS for initial state */
+    /* #question, #answer-buttons, #result, #emotion-choice { display: none; } */
+
+
+    /* 페이지네이션 버튼 컨테이너 - 위치 고정 (buttons 클래스와 동일하게 설정) */
+    #result-buttons.pagination-buttons { /* 더 명확하게 지정 */
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        display: flex; /* Always flex for fixed position */
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        /* 위치 고정 */
+        position: fixed;
+        bottom: 0; /* 하단에 고정 */
+        left: 0;
+        width: 100%; /* 너비 전체 */
+        background-color: #fff0e0; /* 배경색과 동일하게 설정 */
+        padding: 10px 20px; /* 패딩 추가 */
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* 상단 그림자 */
+        box-sizing: border-box; /* 패딩 포함 */
+        z-index: 1000; /* 다른 요소 위로 오도록 설정 */
+    }
+
+    #result-buttons.pagination-buttons.visible {
+        opacity: 1;
+    }
+
+
+    #result-buttons.pagination-buttons button {
+        margin: 5px 8px;
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <h1 id="title" class="fade-element">루아의 감정테스트💙</h1> <p id="description" class="fade-element">당신의 감정 흐름을 알아보는 간단한 테스트입니다.<br>각 질문에 솔직하게 답해 주세요.</p>
+  <div class="buttons" id="start-button">
+    <button onclick="chooseEmotion()">OK</button>
+  </div>
+
+  <div id="emotion-choice" class="fade-element">
+    <h1>당신이 궁금한 감정은 무엇인가요?</h1>
+    <div class="buttons">
+      <button onclick="selectEmotion('사랑')">💖 사랑</button>
+      <button onclick="selectEmotion('슬픔')">🌧️ 슬픔</button>
+      <button onclick="selectEmotion('기쁨')">🌞 기쁨</button>
+      <button onclick="selectEmotion('두려움')">🛡️ 두려움</button>
+      <button onclick="selectEmotion('용기')">🦋 용기</button>
+    </div>
+  </div>
+
+  <h1 id="question" class="fade-element"></h1>
+  <div class="buttons" id="answer-buttons">
+    <button onclick="handleAnswer('yes')">Yes</button>
+    <button onclick="handleAnswer('no')">No</button>
+  </div>
+
+  <div id="result" class="fade-element">
+      <div class="result-text-area"></div>
+      </div>
+
+  <div class="pagination-buttons" id="result-buttons">
+      <button id="prev-button" onclick="navigateResult(-1)">이전</button>
+      <button id="next-button" onclick="navigateResult(1)">다음</button>
+      <button id="restart-button" onclick="restartTest()">처음으로 돌아가기</button>
+  </div>
+
+
+  <script src="results_data.js"></script>
+  <script>
+    // --- DOM Element References ---
+    const titleEl = document.getElementById('title');
+    const descriptionEl = document.getElementById('description');
+    const startButtonEl = document.getElementById('start-button');
+    const emotionChoiceEl = document.getElementById('emotion-choice');
+    const emotionButtonsEl = emotionChoiceEl.querySelector('.buttons'); // Get buttons inside emotion choice
+    const questionEl = document.getElementById('question');
+    const answerButtonsEl = document.getElementById('answer-buttons');
+    const resultEl = document.getElementById('result');
+    const resultTextAreaEl = resultEl.querySelector('.result-text-area'); // 결과 텍스트가 표시될 영역
+    const resultButtonsEl = document.getElementById('result-buttons'); // 결과 페이지네이션 버튼 컨테이너
+    const prevButtonEl = document.getElementById('prev-button'); // 이전 버튼
+    const nextButtonEl = document.getElementById('next-button'); // 다음 버튼
+    const restartButtonEl = document.getElementById('restart-button'); // 재시작 버튼
+
+
+    // --- Question Data Structure ---
+    // (이 부분은 변경 없음)
+    const questionTree = {
+      '사랑': {
+        question: '최근, 누군가를 생각하면 마음이 따뜻해진 적이 있나요?',
+        yes: {
+          question: '그 감정은 지금도 계속되고 있나요?',
+          yes: {
+            question: '그 사람과 함께했던 기억이 미소를 짓게 하나요?',
+            yes: {},
+            no: {}
+          },
+          no: {
+            question: '그 기억은 아픔보다는 따뜻함이 남아있나요?',
+            yes: {},
+            no: {}
+          }
+        },
+        no: {
+          question: '마음을 울리는 새로운 연결을 찾고 싶나요?',
+          yes: {
+            question: '그 새로운 연결은 기대보다는 두려움이 큰가요?',
+            yes: {},
+            no: {}
+          },
+          no: {
+            question: '현재 당신은 혼자 있어도 편안함을 느끼나요?',
+            yes: {},
+            no: {}
+          }
+        }
+      },
+      '슬픔': {
+        question: '최근, 마음이 무거웠던 순간이 있었나요?',
+        yes: {
+          question: '그 무거움이 오래 지속되었나요?',
+          yes: {
+            question: '누군가에게 기대고 싶었던 적이 있나요?',
+            yes: {},
+            no: {}
+          },
+          no: {
+            question: '혼자 이겨내려 했나요?',
+            yes: {},
+            no: {}
+          }
+        },
+        no: {
+          question: '가끔 이유 없이 공허함을 느끼나요?',
+          yes: {
+            question: '그 공허함을 채우려 노력했나요?',
+            yes: {},
+            no: {}
+          },
+          no: {
+            question: '그 공허함을 외면하려 했나요?',
+            yes: {},
+            no: {}
+          }
+        }
+      },
+      '기쁨': {
+        question: '최근, 특별한 이유 없이 웃었던 순간이 있나요?',
+        yes: {
+          question: '그 웃음이 오래 기억에 남았나요?',
+          yes: {
+            question: '누군가와 그 순간을 나누었나요?',
+            yes: {},
+            no: {}
+          },
+          no: {
+            question: '혼자만의 즐거움으로 간직했나요?',
+            yes: {},
+            no: {}
+          }
+        },
+        no: {
+          question: '기쁨을 찾기 위해 무언가 시도했나요?',
+          yes: {
+            question: '그 시도가 당신을 조금이라도 행복하게 했나요?',
+            yes: {},
+            no: {}
+          },
+          no: {
+            question: '시도조차 부담스럽게 느껴졌나요?',
+            yes: {},
+            no: {}
+          }
+        }
+      },
+      '두려움': {
+        question: '최근, 시작하기 전에 망설였던 일이 있었나요?',
+        yes: {
+          question: '그 망설임은 두려움 때문이었나요?',
+          yes: {
+            question: '두려움을 넘어서 행동한 적이 있나요?',
+            yes: {},
+            no: {}
+          },
+          no: {
+            question: '다른 이유로 머뭇거렸나요?',
+            yes: {},
+            no: {}
+          }
+        }
+      },
+      '용기': {
+        question: '최근, 무언가에 맞서야 했던 순간이 있었나요?',
+        yes: {
+          question: '그 순간을 통해 성장했다고 느끼나요?',
+          yes: {
+            question: '다시 같은 상황이 와도 맞설 수 있나요?',
+            yes: {},
+            no: {}
+          },
+          no: {
+            question: '그 순간이 아직 마음에 남아있나요?',
+            yes: {},
+            no: {}
+          }
+        },
+        no: {
+          question: '용기를 내야 할 상황을 피한 적이 있나요?',
+          yes: {
+            question: '그 피한 선택을 후회한 적이 있나요?',
+            yes: {},
+            no: {}
+          },
+          no: {
+            question: '피한 것이 최선의 선택이었다고 느끼나요?',
+            yes: {},
+            no: {}
+          }
+        }
+      }
+    };
+
+    // --- State Variables ---
+    let selectedTree = null;
+    let currentNode = null;
+    let answers = [];
+    let currentResultSections = []; // 결과를 섹션별로 저장할 배열
+    let currentSectionIndex = 0; // 현재 표시 중인 결과 섹션 인덱스
+    // revealSpeed 변수는 더 이상 사용되지 않습니다.
+
+
+    // --- Utility Function for Fade Transitions ---
+    /**
+     * Fades out an element, executes a callback, then fades in another element.
+     * Handles fixed position elements by managing display and opacity.
+     * @param {HTMLElement} elementOut - The element to fade out.
+     * @param {HTMLElement} elementIn - The element to fade in.
+     * @param {Function} [callback] - Optional function to execute after fade out, before fade in.
+     */
+    function fadeTransition(elementOut, elementIn, callback) {
+        const isElementOutFixed = elementOut && (elementOut.style.position === 'fixed' || window.getComputedStyle(elementOut).position === 'fixed');
+        const isElementInFixed = elementIn && (elementIn.style.position === 'fixed' || window.getComputedStyle(elementIn).position === 'fixed');
+
+
+        if (elementOut) {
+            elementOut.classList.remove('visible');
+            // Wait for fade-out transition to complete before hiding
+            setTimeout(() => {
+                if (!isElementOutFixed) { // Only hide non-fixed elements with display: none
+                   elementOut.style.display = 'none';
+                } else { // For fixed elements, set display to none after fade out
+                     elementOut.style.display = 'none';
+                }
+                if (callback) callback(); // Execute callback if provided
+
+                if (elementIn) {
+                    if (!isElementInFixed) { // Only show non-fixed elements with display: block
+                        elementIn.style.display = 'block';
+                    } else { // For fixed elements, set display first if needed (e.g., from none)
+                         // Check if display is none and set it to flex/block before fading in
+                        if (window.getComputedStyle(elementIn).display === 'none') {
+                             elementIn.style.display = elementIn.classList.contains('buttons') || elementIn.classList.contains('pagination-buttons') ? 'flex' : 'block';
+                        }
+                    }
+                    // Use another timeout to ensure display change is rendered before adding class
+                    setTimeout(() => elementIn.classList.add('visible'), 50); // Short delay
+                }
+            }, 500); // Match CSS transition duration
+        } else {
+            // If no element to fade out, just execute callback and fade in
+            if (callback) callback();
+             if (elementIn) {
+                 if (!isElementInFixed) {
+                    elementIn.style.display = 'block';
+                 } else {
+                     if (window.getComputedStyle(elementIn).display === 'none') {
+                          elementIn.style.display = elementIn.classList.contains('buttons') || elementIn.classList.contains('pagination-buttons') ? 'flex' : 'block';
+                     }
+                 }
+                setTimeout(() => elementIn.classList.add('visible'), 50);
+            }
+        }
+    }
+
+     /**
+     * Fades out multiple elements simultaneously, then executes a callback.
+     * Handles fixed position elements by managing display and opacity.
+     * @param {HTMLElement[]} elementsOut - Array of elements to fade out.
+     * @param {Function} [callback] - Optional function after fade out.
+     */
+    function fadeOutMultiple(elementsOut, callback) {
+        elementsOut.forEach(el => el.classList.remove('visible'));
+
+        setTimeout(() => {
+            elementsOut.forEach(el => {
+                 const isElementFixed = el && (el.style.position === 'fixed' || window.getComputedStyle(el).position === 'fixed');
+                 if (!isElementFixed) { // Only hide non-fixed elements with display: none
+                    el.style.display = 'none';
+                 } else { // For fixed elements, set display to none after fade out
+                     el.style.display = 'none';
+                 }
+            });
+            if (callback) callback(); // Execute callback if provided
+        }, 500); // Match CSS transition duration for fade out
+    }
+
+
+    // --- Text Display Function (Smooth Fade-in) ---
+    /**
+     * Displays the given HTML string in the target element with a smooth fade-in animation.
+     * @param {HTMLElement} element - The element to display into (e.g., resultTextAreaEl).
+     * @param {string} htmlString - The HTML string to display.
+     * @param {Function} onComplete - Callback function to execute after fade-in is complete.
+     */
+    function displayResultTextSmoothly(element, htmlString, onComplete) {
+        // Fade out current content first
+        element.style.opacity = 0;
+
+        // Wait for fade-out to complete before changing content and fading in
+        // The duration here should match the CSS transition duration for opacity
+        const fadeOutDelay = 300; // Shorter delay for fade-out
+        const fadeInDuration = 1500; // Match CSS transition duration (1.5s) for fade-in
+
+        setTimeout(() => {
+            element.innerHTML = htmlString; // Set new content instantly
+
+            // Force a reflow/repaint to ensure the opacity: 0 is applied before opacity: 1
+            // This is a common technique to make sure the transition is triggered.
+            // void element.offsetWidth; // Removed as it might cause abruptness
+
+            // Fade in new content - use a very small delay to ensure transition triggers
+            setTimeout(() => {
+                element.style.opacity = 1;
+                 // Execute onComplete callback after the fade-in transition duration
+                setTimeout(() => {
+                     if (onComplete) onComplete();
+                }, fadeInDuration);
+            }, 50); // Small delay to allow browser to register opacity: 0 before opacity: 1
+
+        }, fadeOutDelay); // Use the defined fade out delay
+    }
+
+    // --- Function to process result section HTML (remove numbers) ---
+    /**
+     * Processes a single result section HTML string to remove leading numbers (e.g., "1. ").
+     * Assumes the number is at the start of the text content within the first <p> or <strong> tag.
+     * @param {string} sectionHTML - The HTML string for a single result section.
+     * @returns {string} The processed HTML string with leading numbers removed.
+     */
+    function processResultSectionHTML(sectionHTML) {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = sectionHTML.trim(); // Use trim() in case there's leading/trailing whitespace
+
+        // Find the first text node or element that might contain the number prefix
+        let targetNode = null;
+        if (tempDiv.firstChild) {
+             // Check if the first child is a text node or an element
+            if (tempDiv.firstChild.nodeType === Node.TEXT_NODE) {
+                targetNode = tempDiv.firstChild;
+            } else if (tempDiv.firstChild.nodeType === Node.ELEMENT_NODE) {
+                // If it's an element (like <p> or <strong>), look inside it
+                const firstElement = tempDiv.firstChild;
+                if (firstElement.firstChild && firstElement.firstChild.nodeType === Node.TEXT_NODE) {
+                    targetNode = firstElement.firstChild;
+                } else if (firstElement.tagName === 'STRONG' && firstElement.firstChild && firstElement.firstChild.nodeType === Node.TEXT_NODE) {
+                     targetNode = firstElement.firstChild; // Target text inside <strong>
+                } else {
+                    // Look for text within nested elements if necessary (simple case)
+                    const textNodes = [];
+                    function findTextNodes(node) {
+                        if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
+                            textNodes.push(node);
+                        }
+                        for (let i = 0; i < node.childNodes.length; i++) {
+                            findTextNodes(node.childNodes[i]);
+                        }
+                    }
+                    findTextNodes(firstElement);
+                    if (textNodes.length > 0) {
+                        targetNode = textNodes[0]; // Take the first non-empty text node found
+                    }
+                }
+            }
+        }
+
+
+        if (targetNode && targetNode.nodeType === Node.TEXT_NODE) {
+            let textContent = targetNode.textContent;
+            // Use regex to find and remove leading number and dot (e.g., "1. ", " 2. ")
+            const numberPrefixRegex = /^\s*\d+\.\s*/;
+            if (numberPrefixRegex.test(textContent)) {
+                targetNode.textContent = textContent.replace(numberPrefixRegex, '');
+            }
+        }
+
+        // Return the modified HTML string
+        return tempDiv.innerHTML;
+    }
+
+
+    // --- Event Handlers and Logic Functions ---
+
+    // Initial setup: Show title, description, and start button on load
+    window.onload = () => {
+        titleEl.style.display = 'block';
+        descriptionEl.style.display = 'block';
+        startButtonEl.style.display = 'flex'; // Fixed position, set display to flex explicitly
+        setTimeout(() => {
+            titleEl.classList.add('visible');
+            descriptionEl.classList.add('visible');
+            startButtonEl.classList.add('visible'); // Fade in the fixed start button
+        }, 50); // Short delay to trigger transition
+    };
+
+    // Start the test: Hide initial screen, show emotion choice
+    function chooseEmotion() {
+        console.log('chooseEmotion called'); // Debugging log
+        // Fade out initial screen elements
+        titleEl.classList.remove('visible');
+        descriptionEl.classList.remove('visible');
+        startButtonEl.classList.remove('visible'); // Fade out the fixed start button
+
+        setTimeout(() => {
+            // Hide initial screen elements after fade out
+            titleEl.style.display = 'none';
+            descriptionEl.style.display = 'none';
+            startButtonEl.style.display = 'none'; // Hide fixed button after fade out
+
+            // Clear previous result stuff
+            resultTextAreaEl.innerHTML = '';
+            resultButtonsEl.classList.remove('visible'); // 결과 버튼 컨테이너 숨김
+            resultButtonsEl.style.display = 'none'; // Hide fixed buttons
+            resultEl.classList.remove('visible');
+            resultEl.style.display = 'none'; // Ensure result area is hidden
+
+
+            // Show emotion choice div and its buttons div
+            emotionChoiceEl.style.display = 'block';
+            emotionButtonsEl.style.display = 'flex'; // Fixed position, set display to flex explicitly
+
+
+            // Fade in emotion choice div and its buttons div
+            setTimeout(() => {
+                emotionChoiceEl.classList.add('visible');
+                emotionButtonsEl.classList.add('visible'); // Fade in the fixed emotion choice buttons
+            }, 50); // Short delay before adding visible class
+
+        }, 500); // Match CSS transition duration for fade out
+    }
+
+    // Emotion selected: Hide emotion choice, show first question
+    function selectEmotion(emotion) {
+      selectedTree = questionTree[emotion];
+      currentNode = selectedTree;
+      answers = []; // Reset answers for the new emotion
+
+      // Fade out emotion choice elements
+      emotionChoiceEl.classList.remove('visible');
+      emotionButtonsEl.classList.remove('visible'); // Fade out the fixed emotion choice buttons
+
+      setTimeout(() => {
+          // Hide emotion choice elements after fade out
+          emotionChoiceEl.style.display = 'none';
+          emotionButtonsEl.style.display = 'none'; // Hide fixed buttons
+
+          // Show question element
+          questionEl.style.display = 'block';
+          // Show answer buttons (fixed)
+          answerButtonsEl.style.display = 'flex'; // Fixed position, set display to flex explicitly
+
+          // Fade in question element and answer buttons
+          setTimeout(() => {
+               questionEl.classList.add('visible');
+               answerButtonsEl.classList.add('visible'); // Fade in the fixed answer buttons
+               displayQuestion(); // Set the first question text
+          }, 50); // Short delay before adding visible class
+
+      }, 500); // Wait for fade out
+    }
+
+    // Display the current question
+    function displayQuestion() {
+      if (currentNode && currentNode.question) {
+        questionEl.innerText = currentNode.question;
+        // Ensure question element is visible (it might have been faded out)
+        if (!questionEl.classList.contains('visible')) {
+            questionEl.style.display = 'block';
+            setTimeout(() => questionEl.classList.add('visible'), 50);
+        }
+         // Ensure answer buttons are visible (fixed)
+        if (!answerButtonsEl.classList.contains('visible')) {
+            answerButtonsEl.style.display = 'flex'; // Fixed position, set display to flex explicitly
+            setTimeout(() => answerButtonsEl.classList.add('visible'), 50);
+        }
+
+      } else {
+        // No more questions, calculate and show the result
+        calculateResult();
+      }
+    }
+
+    // Handle user's answer (Yes/No)
+    function handleAnswer(answer) {
+      if (currentNode && currentNode[answer]) {
+        answers.push(answer);
+        currentNode = currentNode[answer];
+
+        // Fade out current question and answer buttons
+        questionEl.classList.remove('visible');
+        answerButtonsEl.classList.remove('visible'); // Fade out answer buttons (fixed)
+
+        setTimeout(() => {
+            // Hide elements after fade out
+            questionEl.style.display = 'none';
+            answerButtonsEl.style.display = 'none'; // Hide fixed buttons
+
+            // Check if there's a next question before fading in
+            if (currentNode && currentNode.question) {
+                 displayQuestion(); // Update text and fade in question and answer buttons
+            } else {
+                // No more questions, transition to result
+                // Fade out questionEl (already fading out), then show resultEl
+                // Answer buttons are already hidden
+                fadeTransition(null, resultEl, calculateResult); // Fade in resultEl and calculate
+            }
+        }, 500); // Wait for fade out
+      }
+    }
+
+    // Calculate and display the final result
+    function calculateResult() {
+      // Hide question and answer elements if they are still visible
+      questionEl.classList.remove('visible');
+      answerButtonsEl.classList.remove('visible'); // Ensure fixed answer buttons are hidden
+
+      setTimeout(() => {
+          questionEl.style.display = 'none';
+          answerButtonsEl.style.display = 'none'; // Hide fixed buttons
+      }, 500);
+
+      // 현재 선택된 감정과 답변 경로를 가져옵니다.
+      const emotion = Object.keys(questionTree).find(key => questionTree[key] === selectedTree);
+      const path = answers.join('-');
+
+      // results_data.js 파일의 resultTexts 객체에서 해당 감정과 경로의 결과 텍스트를 가져옵니다.
+      let fullResultHTML = "<p>결과를 불러오지 못했습니다.</p>"; // 기본 오류 메시지 (HTML 형식)
+
+      // resultTexts 객체가 로드되었는지, 그리고 해당 감정과 경로의 데이터가 존재하는지 확인
+      if (typeof resultTexts !== 'undefined' && resultTexts[emotion] && resultTexts[emotion][path]) {
+          fullResultHTML = resultTexts[emotion][path];
+      }
+
+      // 결과 HTML을 <hr> 태그를 기준으로 섹션으로 분할합니다.
+      // 각 섹션의 시작 부분에 <hr>이 있을 수 있으므로, 첫 번째 요소는 건너뛰거나 처리해야 할 수 있습니다.
+      // 여기서는 <hr>로 분할하고 각 섹션의 앞뒤 공백을 제거합니다.
+      const sections = fullResultHTML.split('<hr>').map(section => section.trim()).filter(section => section.length > 0);
+
+      // 분할된 각 섹션에서 아라비아 숫자를 제거합니다.
+      currentResultSections = sections.map(sectionHTML => processResultSectionHTML(sectionHTML));
+      currentSectionIndex = 0; // 첫 번째 섹션부터 시작
+
+      // 결과 영역을 먼저 보이게 합니다.
+      resultEl.style.display = 'block';
+      setTimeout(() => resultEl.classList.add('visible'), 50);
+
+      // 첫 번째 결과 섹션을 부드러운 페이드 인 애니메이션으로 표시합니다.
+      displayResultTextSmoothly(resultTextAreaEl, currentResultSections[currentSectionIndex], () => {
+           // 텍스트 표시 완료 후 결과 버튼 컨테이너를 보이게 합니다.
+           resultButtonsEl.style.display = 'flex'; // Fixed position, set display to flex explicitly
+           setTimeout(() => resultButtonsEl.classList.add('visible'), 50); // Fade in the fixed buttons
+           updateResultButtons(); // 버튼 상태 업데이트
+      });
+    }
+
+    // 특정 결과 섹션을 표시하는 함수 (부드러운 페이드 인)
+    function displayResultSection(index) {
+        if (index >= 0 && index < currentResultSections.length) {
+            // 현재 섹션을 resultTextAreaEl에 부드러운 페이드 인 애니메이션으로 표시
+            displayResultTextSmoothly(resultTextAreaEl, currentResultSections[index], () => {
+                // 텍스트 표시 완료 후 버튼 상태 업데이트
+                currentSectionIndex = index; // 인덱스 업데이트는 애니메이션 완료 후
+                updateResultButtons();
+            });
+        }
+    }
+
+    // 결과 페이지네이션 버튼 상태를 업데이트하는 함수
+    function updateResultButtons() {
+        // 이전 버튼 상태
+        if (currentSectionIndex > 0) {
+            prevButtonEl.style.display = 'inline-block';
+        } else {
+            prevButtonEl.style.display = 'none';
+        }
+
+        // 다음 버튼 상태
+        if (currentSectionIndex < currentResultSections.length - 1) {
+            nextButtonEl.style.display = 'inline-block';
+            restartButtonEl.style.display = 'none'; // 다음 버튼이 있으면 재시작 버튼 숨김
+        } else {
+            nextButtonEl.style.display = 'none'; // 마지막 섹션이면 다음 버튼 숨김
+            restartButtonEl.style.display = 'inline-block'; // 마지막 섹션이면 재시작 버튼 표시
+        }
+
+        // 재시작 버튼은 마지막 섹션에서만 표시되므로 위에서 처리
+        // prevButton과 nextButton이 모두 숨겨지면 (섹션이 1개 이하), restartButton만 보이게 됨.
+        if (currentResultSections.length <= 1) {
+             prevButtonEl.style.display = 'none';
+             nextButtonEl.style.display = 'none';
+             restartButtonEl.style.display = 'inline-block';
+        }
+    }
+
+
+    // 결과 페이지네이션 탐색 함수
+    function navigateResult(direction) {
+        const newIndex = currentSectionIndex + direction;
+        displayResultSection(newIndex);
+    }
+
+
+    // Restart the test: Hide result, show initial screen
+    function restartTest() {
+        // Fade out result elements
+        resultEl.classList.remove('visible');
+        resultButtonsEl.classList.remove('visible'); // Fade out fixed buttons container
+
+        setTimeout(() => {
+            // Hide elements after fade out
+            resultEl.style.display = 'none'; // Hide result area
+            resultButtonsEl.style.display = 'none'; // Hide fixed buttons
+
+            // Reset state variables
+            selectedTree = null;
+            currentNode = null;
+            answers = [];
+            currentResultSections = []; // 결과 섹션 배열 초기화
+            currentSectionIndex = 0; // 인덱스 초기화
+
+
+            // Make sure other elements are hidden
+            emotionChoiceEl.style.display = 'none';
+            questionEl.style.display = 'none';
+            answerButtonsEl.style.display = 'none'; // Ensure fixed answer buttons are hidden
+            emotionChoiceEl.classList.remove('visible');
+            questionEl.classList.remove('visible');
+            answerButtonsEl.classList.remove('visible');
+
+
+            // Show initial screen elements (title, description, start button)
+            titleEl.style.display = 'block';
+            descriptionEl.style.display = 'block';
+            startButtonEl.style.display = 'flex'; // Fixed position, set display to flex explicitly
+
+             // Fade in initial screen elements
+             setTimeout(() => {
+                titleEl.classList.add('visible');
+                descriptionEl.classList.add('visible');
+                startButtonEl.classList.add('visible'); // Fade in the fixed start button
+            }, 50); // Short delay before adding visible class
+
+        }, 500); // Wait for fade out
+    }
+
+  </script>
+</body>
+</html>
