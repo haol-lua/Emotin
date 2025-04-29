@@ -11,21 +11,20 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center; /* 수직 중앙 정렬 유지 */
+      /* justify-content: center; */ /* 내용 상단 정렬 */
+      padding-top: 40px;
       min-height: 100vh;
       margin: 0;
       padding: 20px;
-      /* 글꼴 변경 */
       font-family: 'Gowun Batang', serif;
-      /* 배경색 조정: 눈이 편하고 따뜻한 느낌의 색상 */
-      background-color: #fff0e0; /* 부드러운 복숭아/베이지 톤 유지 */
-      color: #333; /* 기본 텍스트 색상 */
+      background-color: #fff0e0;
+      color: #333;
       box-sizing: border-box;
-      padding-bottom: 80px; /* 고정 버튼 영역만큼 하단 패딩 추가 */
-      overflow-y: auto; /* 스크롤 가능하도록 설정 */
+      padding-bottom: 100px;
+      overflow-y: auto;
     }
 
-    /* Text elements that will fade */
+    /* 페이드 요소 공통 스타일 */
     .fade-element {
       opacity: 0;
       transition: opacity 0.5s ease-in-out;
@@ -35,16 +34,15 @@
       max-width: 600px;
     }
 
-    /* Class to make elements visible */
     .fade-element.visible {
       opacity: 1;
     }
 
     h1 {
       font-size: 1.8em;
-      color: #5a3e36; /* 제목 색상 조정 */
-      margin-bottom: 30px; /* 제목과 내용 간격 추가 */
-      font-weight: bold; /* 질문 텍스트 굵기 (기본 h1보다 명시적으로) */
+      color: #5a3e36;
+      margin-bottom: 20px;
+      font-weight: bold;
     }
 
     p {
@@ -52,115 +50,136 @@
         line-height: 1.6;
     }
 
-    /* 버튼 컨테이너 - 위치 고정 */
-    .buttons {
-      text-align: center;
-      opacity: 0;
-      transition: opacity 0.5s ease-in-out 0.3s;
-      width: 100%;
-      /* 위치 고정 */
-      position: fixed;
-      bottom: 0; /* 하단에 고정 */
-      left: 0;
-      width: 100%; /* 너비 전체 */
-      background-color: #fff0e0; /* 배경색과 동일하게 설정 */
-      padding: 10px 20px; /* 패딩 추가 */
-      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* 상단 그림자 */
-      box-sizing: border-box; /* 패딩 포함 */
-      z-index: 1000;
-       /* JS에서 display 제어 */
-      display: none; /* Initially hidden by default */
-    }
-
-
-    .buttons.visible {
-        opacity: 1;
-    }
-
+    /* === 버튼 공통 스타일 === */
     button {
-      margin: 8px; /* 버튼 간 기본 마진 */
+      margin: 5px 8px;
       padding: 12px 25px;
       font-size: 1em;
       cursor: pointer;
       border: none;
       border-radius: 8px;
-      /* 버튼 색상 조정: 배경색과 어울리도록 */
-      background-color: #ff914d; /* 따뜻한 오렌지 톤 */
+      background-color: #ff914d; /* 기본 버튼 색상 (주황색 계열) */
       color: white;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       transition: background-color 0.3s ease, transform 0.1s ease;
+      font-family: 'Gowun Batang', serif;
     }
 
     button:hover {
-      background-color: #357abd; /* 호버 시 약간 어둡게 */
+      background-color: #e67e22; /* 기본 버튼 호버 색상 */
     }
 
     button:active {
         transform: scale(0.98);
     }
 
-    /* 새로운 첫 화면 스타일 */
+    /* === 하단 고정 버튼 컨테이너 공통 스타일 === */
+    /* 초기 화면 제외 모든 하단 고정 버튼 컨테이너 */
+    #start-button,
+    #emotion-choice .buttons,
+    #answer-buttons,
+    .pagination-buttons,
+    #quote-page .buttons {
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      background-color: #fff0e0;
+      padding: 15px 20px;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      z-index: 1000;
+      display: flex; /* 기본 display flex 로 변경 */
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      display: none; /* JS로 제어 */
+    }
+
+    /* Visible 상태일 때 */
+    #start-button.visible,
+    #emotion-choice .buttons.visible,
+    #answer-buttons.visible,
+    .pagination-buttons.visible,
+    #quote-page .buttons.visible {
+        opacity: 1;
+        display: flex; /* Flex 활성화 */
+    }
+
+
+    /* === 초기 화면 스타일 === */
     #initial-page {
-        display: flex; /* JS에서 제어 */
+        display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
-        min-height: calc(100vh - 80px); /* 버튼 영역 제외 높이 */
+        min-height: calc(100vh - 100px);
         box-sizing: border-box;
-        opacity: 0; /* JS에서 제어 */
+        opacity: 0;
         transition: opacity 0.5s ease-in-out;
-         /* Initially hidden by default */
-        display: none;
+        display: none; /* JS 제어 */
     }
 
     #initial-page.visible {
         opacity: 1;
+        display: flex;
     }
 
     #initial-page h1 {
         margin-bottom: 10px;
     }
 
+    /* 초기 화면 버튼 컨테이너 (고정 아님) */
     #initial-page .buttons {
-        position: static; /* 첫 화면 버튼은 고정 해제 */
+        position: static;
         box-shadow: none;
         background-color: transparent;
         padding: 0;
         margin-top: 20px;
-        opacity: 0; /* JS에서 별도로 페이드인 제어 */
-        transition: opacity 0.5s ease-in-out 0.5s; /* 텍스트 페이드인 후 지연 */
-         /* JS에서 display 제어 */
-        display: none; /* Initially hidden by default */
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out 0.5s;
+        display: none; /* JS 제어 */
+        text-align: center; /* 버튼 중앙 정렬 */
+        width: 100%; /* 너비 확보 */
     }
 
     #initial-page .buttons.visible {
         opacity: 1;
+        display: block; /* block으로 변경하여 text-align 적용 */
+    }
+    /* 초기 화면 버튼 색상 */
+    #initial-page .buttons button {
+        background-color: #6a5acd; /* 보라색 계열 */
+    }
+    #initial-page .buttons button:hover {
+        background-color: #5a4ac0;
     }
 
 
-    /* 감정 테스트 관련 요소들 (초기 숨김) */
+    /* === 감정 테스트 영역 스타일 === */
     #emotion-test-area {
-        display: none; /* JS에서 제어 */
+        display: none; /* JS 제어 */
         flex-direction: column;
         align-items: center;
-        justify-content: center;
         width: 100%;
         max-width: 600px;
-        min-height: calc(100vh - 80px); /* 버튼 영역 제외 높이 */
+        min-height: calc(100vh - 100px);
         box-sizing: border-box;
-        opacity: 0; /* JS에서 제어 */
+        opacity: 0;
         transition: opacity 0.5s ease-in-out;
-         /* Initially hidden by default */
-        display: none;
     }
 
     #emotion-test-area.visible {
          opacity: 1;
+         display: flex;
     }
 
+    /* 감정 테스트 영역 내 페이드 요소 */
     #emotion-test-area > .fade-element {
-        /* 감정 테스트 내부 요소들의 페이드인/아웃 */
         opacity: 0;
         transition: opacity 0.5s ease-in-out;
     }
@@ -169,216 +188,154 @@
          opacity: 1;
      }
 
-
+    /* 감정 선택 제목 */
     #emotion-test-area #emotion-choice h1 {
         margin-bottom: 10px;
     }
 
+    /* 감정 선택 버튼 */
     #emotion-test-area #emotion-choice .buttons button {
-        margin: 10px;
-        background-color: #ffc107; /* 감정 선택 버튼 색상 */
+        background-color: #ffc107; /* 노란색 계열 */
+        color: #333;
     }
     #emotion-test-area #emotion-choice .buttons button:hover {
         background-color: #ffb300;
     }
 
+    /* 질문(h1) 스타일 */
+    #question {
+        min-height: 5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-    /* 결과 텍스트 영역 스타일 */
+
+    /* === 결과 페이지 스타일 === */
     #emotion-test-area #result {
-      font-size: 1.3em;
+      font-size: 1.2em;
       color: #333;
       margin-top: 20px;
-      text-align: center;
+      text-align: left;
+      width: 100%;
       max-width: 600px;
-      line-height: 1.6;
+      line-height: 1.7;
       opacity: 0;
       transition: opacity 0.5s ease-in-out;
-      margin-bottom: 80px; /* 결과 텍스트 하단에도 고정 버튼 영역만큼 패딩 추가 */
+      margin-bottom: 100px;
+      display: none; /* 초기 숨김 */
     }
 
     #emotion-test-area #result.visible {
         opacity: 1;
+        display: block;
     }
 
+    /* 결과 텍스트 표시 영역 */
     #emotion-test-area #result .result-text-area {
         min-height: 150px;
-        text-align: left;
-        padding: 0;
-        border: none;
-        border-radius: 0;
-        background-color: transparent;
-        box-shadow: none;
-        /* 페이지네이션 전환 애니메이션 - opacity 전환 시간 조정 */
-        transition: opacity 1.5s ease-in-out; /* 이전 0.3s에서 1.5s로 증가 */
+        padding: 0; /* *** FIX: 패딩 제거 (박스 제거) *** */
+        /* *** FIX: 박스 스타일 제거 *** */
+        /* border: 1px solid #e0d0c0; */
+        /* border-radius: 8px; */
+        /* background-color: #fff8f0; */
+        /* box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); */
+        transition: opacity 1.5s ease-in-out;
+        opacity: 0; /* JS에서 fade-in 제어 */
     }
 
      #emotion-test-area #result .result-text-area p {
-         margin-bottom: 10px;
-         font-weight: 500; /* 일반 텍스트 굵기 조정 (질문 텍스트와 유사하게) */
+         margin-bottom: 12px;
+         font-weight: 400;
      }
 
      #emotion-test-area #result .result-text-area strong {
          display: block;
-         margin-bottom: 5px;
-         color: #7a5b50; /* 제목 부분 색상 조정 */
-         font-weight: bold; /* strong 태그는 더 진하게 */
+         margin-bottom: 8px;
+         color: #7a5b50;
+         font-weight: 700;
+         font-size: 1.1em;
      }
 
      #emotion-test-area #result .result-text-area hr {
-         margin: 20px 0;
+         margin: 25px 0;
          border: 0;
-         border-top: 1px solid #e0d0c0; /* 구분선 색상 조정 */
+         border-top: 1px dashed #d4bfa4;
      }
 
-
-    /* 감정 테스트 버튼 컨테이너 (질문/결과) */
-    #emotion-test-area .buttons {
-        position: fixed; /* 감정 테스트 중 버튼은 고정 */
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: #fff0e0;
-        padding: 10px 20px;
-        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-        box-sizing: border-box;
-        z-index: 1000;
-        display: flex; /* JS에서 제어 */
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap;
-        opacity: 0; /* JS에서 제어 */
-        transition: opacity 0.5s ease-in-out;
-         /* Initially hidden by default */
-        display: none;
-    }
-
-    #emotion-test-area .buttons.visible {
-        opacity: 1;
-    }
-
-
-    /* 페이지네이션 버튼 컨테이너 */
-    .pagination-buttons {
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
-        display: flex; /* JS에서 제어 */
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap;
-        /* 위치 고정 */
-        position: fixed;
-        bottom: 0; /* 하단에 고정 */
-        left: 0;
-        width: 100%; /* 너비 전체 */
-        background-color: #fff0e0; /* 배경색과 동일하게 설정 */
-        padding: 10px 20px; /* 패딩 추가 */
-        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* 상단 그림자 */
-        box-sizing: border-box; /* 패딩 포함 */
-        z-index: 1000;
-         /* Initially hidden by default */
-        display: none;
-    }
-
-    .pagination-buttons.visible {
-        opacity: 1;
-    }
-
+    /* 결과 페이지네이션 버튼 */
+    /* *** FIX: 버튼 색상 통일 *** */
     .pagination-buttons button {
-        margin: 5px 8px;
+        background-color: #ff914d; /* 기본 버튼 색상 */
     }
+    .pagination-buttons button:hover {
+        background-color: #e67e22; /* 기본 버튼 호버 색상 */
+    }
+    /* 재시작 버튼만 다른 색 유지 시 주석 해제 */
+    /* .pagination-buttons button#restart-button {
+        background-color: #f44336;
+    }
+     .pagination-buttons button#restart-button:hover {
+        background-color: #da190b;
+    } */
 
 
-    /* 명언 페이지 관련 요소들 (초기 숨김) */
+    /* === 명언 페이지 스타일 === */
     #quote-page {
-        display: none; /* JS에서 제어 */
+        display: none; /* JS 제어 */
         flex-direction: column;
         align-items: center;
-        justify-content: center;
         width: 100%;
         max-width: 600px;
-         min-height: calc(100vh - 80px); /* 버튼 영역 제외 높이 */
+         min-height: calc(100vh - 100px);
         box-sizing: border-box;
         text-align: center;
-        opacity: 0; /* JS에서 제어 */
+        opacity: 0;
         transition: opacity 0.5s ease-in-out;
-         /* Initially hidden by default */
-        display: none;
     }
 
     #quote-page.visible {
         opacity: 1;
+        display: flex;
     }
 
     #quote-page h1 {
         margin-bottom: 30px;
     }
 
+    /* 명언 표시 영역 */
     #quote-display {
         font-size: 1.4em;
         line-height: 1.8;
-        min-height: 150px; /* 명언이 표시될 최소 높이 */
+        min-height: 150px;
         display: flex;
         align-items: center;
         justify-content: center;
         text-align: center;
         margin-bottom: 30px;
         padding: 20px;
-        /* 박스 스타일 제거 */
-        /* border: 1px solid #e0d0c0; */
-        /* border-radius: 10px; */
-        /* background-color: #ffffff; */
-        /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); */
         width: 100%;
         box-sizing: border-box;
-        overflow: hidden; /* 슬롯 애니메이션 시 내용 넘침 방지 */
-        position: relative; /* 애니메이션을 위한 기준점 */
-         /* 슬롯 애니메이션을 위한 CSS */
-        opacity: 1; /* 초기 opacity 설정 */
-        transition: opacity 0.1s ease-in-out; /* 빠른 전환 */
-    }
-
-    /* 슬롯 애니메이션 효과를 위한 클래스 */
-    .slot-animating {
-        /* 애니메이션 중일 때 적용될 스타일 */
-        /* JS에서 opacity를 빠르게 변경하며 애니메이션 구현 */
-    }
-
-
-    /* 명언 페이지 하단 버튼 컨테이너 */
-    #quote-page .buttons {
-         position: fixed; /* 명언 페이지 중 버튼은 고정 */
-         bottom: 0;
-         left: 0;
-         width: 100%;
-         background-color: #fff0e0;
-         padding: 10px 20px;
-         box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-         box-sizing: border-box;
-         z-index: 1000;
-         display: flex; /* JS에서 제어 */
-         justify-content: center;
-         align-items: center;
-         flex-wrap: wrap;
-         opacity: 0; /* JS에서 제어 */
-         transition: opacity 0.5s ease-in-out;
-          /* Initially hidden by default */
-         display: none;
-    }
-
-     #quote-page .buttons.visible {
+        overflow: hidden;
+        position: relative;
         opacity: 1;
-     }
+        transition: opacity 0.1s ease-in-out;
+    }
 
-    /* 명언 페이지의 '새로운 명언 보기' 버튼 색상 */
+    /* 명언 페이지 버튼 */
     #quote-page .buttons #get-quote-button {
-         background-color: #6a5acd; /* 부드러운 보라색 톤 */
-         /* margin-bottom: 0; */ /* 하단 고정 버튼 컨테이너에 있으므로 margin 조정 */
-         margin: 8px; /* 기본 버튼 마진 유지 */
+         background-color: #6a5acd; /* 명언 보기 버튼 색상 */
+         margin: 8px;
     }
      #quote-page .buttons #get-quote-button:hover {
         background-color: #5a4ac0;
      }
-
+    #quote-page .buttons button:last-child { /* 처음으로 돌아가기 버튼 */
+         background-color: #777; /* 회색 계열 */
+    }
+     #quote-page .buttons button:last-child:hover {
+         background-color: #666;
+    }
 
   </style>
 </head>
@@ -392,7 +349,6 @@
             <button onclick="showQuotePage()">오늘의 명언 보기</button>
         </div>
     </div>
-
 
     <div id="emotion-test-area">
         <h1 id="title" class="fade-element">루아의 감정테스트💙</h1>
@@ -419,8 +375,7 @@
         </div>
 
         <div id="result" class="fade-element">
-            <div class="result-text-area"></div>
-        </div>
+            <div class="result-text-area"></div> </div>
 
         <div class="pagination-buttons" id="result-buttons">
             <button id="prev-button" onclick="navigateResult(-1)">이전</button>
@@ -441,559 +396,575 @@
     </div>
 
 
-  <script src="quotes.js"></script> <script src="results_data.js"></script> <script>
+  <script src="quotes.js"></script>
+  <script src="results_data.js"></script>
+
+  <script>
     // --- DOM Element References ---
     const initialPageEl = document.getElementById('initial-page');
-    const initialButtonsEl = document.getElementById('initial-buttons'); // 새로운 첫 화면 버튼 컨테이너
+    const initialButtonsEl = document.getElementById('initial-buttons');
 
-    const emotionTestAreaEl = document.getElementById('emotion-test-area'); // 감정 테스트 전체 영역
+    const emotionTestAreaEl = document.getElementById('emotion-test-area');
     const titleEl = document.getElementById('title');
     const descriptionEl = document.getElementById('description');
-    const startButtonEl = document.getElementById('start-button'); // 감정 테스트 시작 버튼 컨테이너
+    const startButtonEl = document.getElementById('start-button');
     const emotionChoiceEl = document.getElementById('emotion-choice');
-    const emotionButtonsEl = emotionChoiceEl.querySelector('.buttons'); // 감정 선택 버튼 컨테이너
+    const emotionButtonsEl = emotionChoiceEl.querySelector('.buttons');
     const questionEl = document.getElementById('question');
-    const answerButtonsEl = document.getElementById('answer-buttons'); // 질문 답변 버튼 컨테이너
+    const answerButtonsEl = document.getElementById('answer-buttons');
     const resultEl = document.getElementById('result');
-    const resultTextAreaEl = resultEl.querySelector('.result-text-area'); // 결과 텍스트가 표시될 영역
-    const resultButtonsEl = document.getElementById('result-buttons'); // 결과 페이지네이션 버튼 컨테이너
-    const prevButtonEl = document.getElementById('prev-button'); // 이전 버튼
-    const nextButtonEl = document.getElementById('next-button'); // 다음 버튼
-    const restartButtonEl = document.getElementById('restart-button'); // 재시작 버튼 (감정 테스트)
+    const resultTextAreaEl = resultEl.querySelector('.result-text-area');
+    const resultButtonsEl = document.getElementById('result-buttons');
+    const prevButtonEl = document.getElementById('prev-button');
+    const nextButtonEl = document.getElementById('next-button');
+    const restartButtonEl = document.getElementById('restart-button');
 
-    const quotePageEl = document.getElementById('quote-page'); // 명언 페이지 전체 영역
-    const quoteDisplayEl = document.getElementById('quote-display'); // 명언 표시 영역
-    const getQuoteButtonEl = document.getElementById('get-quote-button'); // 명언 보기 버튼
-    const quotePageButtonsEl = quotePageEl.querySelector('.buttons'); // 명언 페이지 하단 버튼 컨테이너
+    const quotePageEl = document.getElementById('quote-page');
+    const quoteDisplayEl = document.getElementById('quote-display');
+    const getQuoteButtonEl = document.getElementById('get-quote-button');
+    const quotePageButtonsEl = quotePageEl.querySelector('.buttons');
 
 
     // --- Question Data Structure ---
-    // (results_data.js에서 로드됩니다)
-
+    // 각 감정별 질문 트리 구조
+    const questionTree = {
+        '사랑': {
+            question: "최근 가슴 뛰는 설렘을 느낀 적이 있나요?",
+            yes: {
+                question: "그 감정을 다른 사람과 나누고 싶다는 생각이 드나요?",
+                yes: {
+                    question: "사랑 때문에 잠 못 이룬 밤이 있나요?",
+                    yes: null, // Result path: yes-yes-yes
+                    no: null   // Result path: yes-yes-no
+                },
+                no: {
+                    question: "지나간 사랑에 대한 아쉬움이 남아 있나요?",
+                    yes: null, // Result path: yes-no-yes
+                    no: null   // Result path: yes-no-no
+                }
+            },
+            no: {
+                question: "새로운 만남에 대한 기대감이 있나요?",
+                yes: {
+                    question: "누군가에게 먼저 다가가는 것이 어렵지 않나요?",
+                    yes: null, // Result path: no-yes-yes
+                    no: null   // Result path: no-yes-no
+                },
+                no: {
+                    question: "혼자 있는 시간이 더 편안하게 느껴지나요?",
+                    yes: null, // Result path: no-no-yes
+                    no: null   // Result path: no-no-no
+                }
+            }
+        },
+        '슬픔': {
+            question: "최근 마음껏 울어본 적이 있나요?",
+            yes: {
+                question: "슬픔을 누군가에게 털어놓고 위로받고 싶나요?",
+                yes: {
+                    question: "나의 슬픔을 이해해주는 사람이 있다고 느끼나요?",
+                    yes: null, // Result path: yes-yes-yes
+                    no: null   // Result path: yes-yes-no
+                },
+                no: {
+                    question: "혼자서 슬픔을 삭이는 편인가요?",
+                    yes: null, // Result path: yes-no-yes
+                    no: null   // Result path: yes-no-no
+                }
+            },
+            no: {
+                question: "가슴이 답답하거나 먹먹함을 자주 느끼나요?",
+                yes: {
+                    question: "슬픔을 애써 외면하려 한 적이 있나요?",
+                    yes: null, // Result path: no-yes-yes
+                    no: null   // Result path: no-yes-no
+                },
+                no: {
+                    question: "특별히 슬프다고 느끼지 않나요?",
+                    yes: null, // Result path: no-no-yes
+                    no: null   // Result path: no-no-no
+                }
+            }
+        },
+        '기쁨': {
+            question: "최근 소리 내어 웃었던 기억이 있나요?",
+            yes: {
+                question: "그 기쁨을 다른 사람들과 함께 나누었나요?",
+                yes: {
+                    question: "사소한 것에서도 즐거움을 찾는 편인가요?",
+                    yes: null, // Result path: yes-yes-yes
+                    no: null   // Result path: yes-yes-no
+                },
+                no: {
+                    question: "기쁨의 순간이 짧게 느껴졌나요?",
+                    yes: null, // Result path: yes-no-yes
+                    no: null   // Result path: yes-no-no
+                }
+            },
+            no: {
+                question: "스스로를 위해 작은 선물을 한 적이 있나요?",
+                yes: {
+                    question: "나를 기쁘게 하는 것이 무엇인지 알고 있나요?",
+                    yes: null, // Result path: no-yes-yes
+                    no: null   // Result path: no-yes-no
+                },
+                no: {
+                    question: "요즘 일상에서 즐거움을 느끼기 어렵나요?",
+                    yes: null, // Result path: no-no-yes
+                    no: null   // Result path: no-no-no
+                }
+            }
+        },
+        '두려움': {
+            question: "최근 무언가에 대해 걱정하거나 불안했던 적이 있나요?",
+            yes: {
+                question: "그 두려움 때문에 하고 싶은 일을 망설였나요?",
+                yes: {
+                    question: "두려움을 극복하기 위해 노력해 본 적이 있나요?",
+                    yes: null, // Result path: yes-yes-yes
+                    no: null   // Result path: yes-yes-no
+                },
+                no: {
+                    question: "두려움보다는 신중함이라고 생각하나요?",
+                    yes: null, // Result path: yes-no-yes
+                    no: null   // Result path: yes-no-no
+                }
+            },
+            no: {
+                question: "새로운 도전 앞에서 긴장감을 느끼는 편인가요?",
+                yes: {
+                    question: "긴장감을 설렘으로 바꿀 수 있다고 생각하나요?",
+                    yes: null, // Result path: no-yes-yes
+                    no: null   // Result path: no-yes-no
+                },
+                no: {
+                    question: "대체로 마음이 평온한 상태인가요?",
+                    yes: null, // Result path: no-no-yes
+                    no: null   // Result path: no-no-no
+                }
+            }
+        },
+        '용기': {
+            question: "최근 어려운 상황에 맞서야 했던 경험이 있나요?",
+            yes: {
+                question: "그 경험을 통해 스스로 성장했다고 느끼나요?",
+                yes: {
+                    question: "다시 비슷한 상황이 와도 맞설 자신이 있나요?",
+                    yes: null, // Result path: yes-yes-yes
+                    no: null   // Result path: yes-yes-no
+                },
+                no: {
+                    question: "상처나 후회가 남았나요?",
+                    yes: null, // Result path: yes-no-yes
+                    no: null   // Result path: yes-no-no
+                }
+            },
+            no: {
+                question: "용기를 내야 하는 상황을 피하고 싶었던 적이 있나요?",
+                yes: {
+                    question: "피했던 선택에 대해 후회한 적이 있나요?",
+                    yes: null, // Result path: no-yes-yes
+                    no: null   // Result path: no-yes-no
+                },
+                no: {
+                    question: "용기를 내는 것보다 안전한 선택을 선호하나요?",
+                    yes: null, // Result path: no-no-yes
+                    no: null   // Result path: no-no-no
+                }
+            }
+        }
+    };
 
     // --- 명언 데이터 (quotes.js 파일에서 로드됩니다) ---
-    // const quotes = [...]; // 이 배열 선언은 quotes.js 파일로 이동했습니다.
+    // quotes 변수는 quotes.js 에서 로드됨
+
+    // --- 결과 텍스트 데이터 (results_data.js 파일에서 로드됩니다) ---
+    // resultTexts 변수는 results_data.js 에서 로드됨
 
 
     // --- State Variables ---
-    let selectedTree = null;
-    let currentNode = null;
-    let answers = [];
-    let currentResultSections = []; // 결과를 섹션별로 저장할 배열
+    let selectedEmotionKey = null; // 선택된 감정 키 ('사랑', '슬픔' 등)
+    let currentNode = null; // 현재 질문 노드
+    let answers = []; // 사용자의 답변 기록 (['yes', 'no', 'yes'])
+    let currentResultSections = []; // 현재 표시할 결과 텍스트 섹션 배열
     let currentSectionIndex = 0; // 현재 표시 중인 결과 섹션 인덱스
-    let slotAnimationInterval = null; // 슬롯 애니메이션 인터벌 ID
+    let slotAnimationInterval = null; // 명언 슬롯 애니메이션 인터벌 ID
 
 
     // --- Utility Functions ---
 
     /**
-     * Hides a specific content area by removing the 'visible' class and setting display to 'none' after transition.
-     * @param {HTMLElement} element - The element to hide.
+     * 지정된 요소를 부드럽게 숨깁니다. (fade out 후 display: none)
+     * @param {HTMLElement} element - 숨길 요소
      */
-    function hideContentArea(element) {
+    function hideElementSmoothly(element) {
+        if (!element) return;
         element.classList.remove('visible');
-        // Set display to none after fade out transition
         setTimeout(() => {
             element.style.display = 'none';
-        }, 500); // Match CSS transition duration
+        }, 500); // CSS transition 시간과 일치
     }
-
-     /**
-     * Hides a specific button container by removing the 'visible' class and setting display to 'none' immediately.
-     * @param {HTMLElement} element - The button container element to hide.
-     */
-    function hideButtonContainer(element) {
-         element.classList.remove('visible');
-         element.style.display = 'none'; // Hide immediately
-    }
-
 
     /**
-     * Shows a specific content area by setting its display and adding the 'visible' class.
-     * @param {HTMLElement} element - The element to show.
-     * @param {string} [displayType='flex'] - The CSS display type ('flex' or 'block').
+     * 지정된 요소를 부드럽게 표시합니다. (display 설정 후 fade in)
+     * @param {HTMLElement} element - 표시할 요소
+     * @param {string} [displayType='flex'] - CSS display 속성 값
      */
-    function showContentArea(element, displayType = 'flex') {
-         // Ensure element starts hidden before fading in
-        element.classList.remove('visible');
-        element.style.opacity = 0; // Explicitly set opacity to 0
+    function showElementSmoothly(element, displayType = 'flex') {
+        if (!element) return;
+        element.style.opacity = 0; // 시작 시 투명
+        element.classList.remove('visible'); // visible 클래스 제거 (초기화)
+        element.style.display = displayType; // display 속성 설정
 
-        element.style.display = displayType; // Set display type
-
-        // Use a small timeout to allow the display change to render before fading in
+        // 잠시 후 visible 클래스 추가하여 fade-in 시작
         setTimeout(() => {
             element.classList.add('visible');
-            element.style.opacity = 1; // Explicitly set opacity to 1 to trigger transition
-        }, 50); // Short delay
+            element.style.opacity = 1; // opacity 1로 변경하여 transition 트리거
+        }, 50); // 짧은 지연
     }
 
-     /**
-     * Shows a specific button container by setting its display and adding the 'visible' class.
-     * @param {HTMLElement} element - The button container element to show.
-     * @param {string} [displayType='flex'] - The CSS display type ('flex' or 'block').
-     */
-     function showButtonContainer(element, displayType = 'flex') {
-         // Ensure element starts hidden before fading in
-        element.classList.remove('visible');
-        element.style.opacity = 0; // Explicitly set opacity to 0
-
-        element.style.display = displayType; // Set display type
-
-        // Use a small timeout to allow the display change to render before fading in
-        setTimeout(() => {
-            element.classList.add('visible');
-            element.style.opacity = 1; // Explicitly set opacity to 1 to trigger transition
-        }, 50); // Short delay
-     }
-
-
-    // --- Text Display Function (Smooth Fade-in) ---
     /**
-     * Displays the given HTML string in the target element with a smooth fade-in animation.
-     * @param {HTMLElement} element - The element to display into (e.g., resultTextAreaEl).
-     * @param {string} htmlString - The HTML string to display.
-     * @param {Function} onComplete - Callback function to execute after fade-in is complete.
+     * 결과 텍스트를 부드럽게 표시합니다. (fade out -> 내용 변경 -> fade in)
+     * @param {HTMLElement} element - 텍스트를 표시할 요소 (resultTextAreaEl)
+     * @param {string} htmlString - 표시할 HTML 문자열
+     * @param {Function} [onComplete] - 애니메이션 완료 후 실행할 콜백 함수
      */
     function displayResultTextSmoothly(element, htmlString, onComplete) {
-        // Fade out current content first
-        element.style.opacity = 0;
+        if (!element) return;
+        const fadeOutDuration = 300; // Fade out 시간
+        const fadeInDuration = 1000; // Fade in 시간 (CSS transition과 일치 또는 조정)
 
-        // Wait for fade-out to complete before changing content and fading in
-        const fadeOutDelay = 300; // Shorter delay for fade-out
-        const fadeInDuration = 1500; // Match CSS transition duration (1.5s) for fade-in
+        element.style.transition = `opacity ${fadeOutDuration}ms ease-in-out`; // Fade out transition 설정
+        element.style.opacity = 0; // Fade out 시작
 
         setTimeout(() => {
-            element.innerHTML = htmlString; // Set new content instantly
-
-            // Fade in new content - use a very small delay to ensure transition triggers
+            element.innerHTML = htmlString; // 내용 변경
+            element.style.transition = `opacity ${fadeInDuration}ms ease-in-out`; // Fade in transition 설정
+            // 잠시 후 fade in 시작
             setTimeout(() => {
                 element.style.opacity = 1;
-                 // Execute onComplete callback after the fade-in transition duration
+                // Fade in 완료 후 콜백 실행
                 setTimeout(() => {
-                     if (onComplete) onComplete();
+                    if (onComplete) onComplete();
+                    // *** FIX: 원래 transition 복원 시점 변경 ***
+                    // 콜백 실행 후 복원해야 콜백 내에서 추가 조작 시 문제 없음
+                    element.style.transition = 'opacity 1.5s ease-in-out';
                 }, fadeInDuration);
-            }, 50); // Small delay to allow browser to register opacity: 0 before opacity: 1
-
-        }, fadeOutDelay); // Use the defined fade out delay
+            }, 50);
+        }, fadeOutDuration);
     }
 
-    // --- Function to process result section HTML (remove numbers) ---
     /**
-     * Processes a single result section HTML string to remove leading numbers (e.g., "1. ").
-     * Assumes the number is at the start of the text content within the first <p> or <strong> tag.
-     * @param {string} sectionHTML - The HTML string for a single result section.
-     * @returns {string} The processed HTML string with leading numbers removed.
+     * 결과 섹션 HTML에서 앞부분의 "숫자." 를 제거합니다.
+     * @param {string} sectionHTML - 처리할 HTML 섹션 문자열
+     * @returns {string} 처리된 HTML 문자열
      */
     function processResultSectionHTML(sectionHTML) {
         const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = sectionHTML.trim(); // Use trim() in case there's leading/trailing whitespace
-
-        // Find the first text node or element that might contain the number prefix
+        tempDiv.innerHTML = sectionHTML.trim();
         let targetNode = null;
         if (tempDiv.firstChild) {
-             // Check if the first child is a text node or an element
             if (tempDiv.firstChild.nodeType === Node.TEXT_NODE) {
                 targetNode = tempDiv.firstChild;
             } else if (tempDiv.firstChild.nodeType === Node.ELEMENT_NODE) {
-                // If it's an element (like <p> or <strong>), look inside it
                 const firstElement = tempDiv.firstChild;
                 if (firstElement.firstChild && firstElement.firstChild.nodeType === Node.TEXT_NODE) {
                     targetNode = firstElement.firstChild;
                 } else if (firstElement.tagName === 'STRONG' && firstElement.firstChild && firstElement.firstChild.nodeType === Node.TEXT_NODE) {
-                     targetNode = firstElement.firstChild; // Target text inside <strong>
+                     targetNode = firstElement.firstChild;
                 } else {
-                    // Look for text within nested elements if necessary (simple case)
                     const textNodes = [];
                     function findTextNodes(node) {
                         if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
                             textNodes.push(node);
                         }
-                        for (let i = 0; i < node.childNodes.length; i++) {
-                            findTextNodes(node.childNodes[i]);
+                        if (node.childNodes) { // childNodes가 있는지 확인
+                            for (let i = 0; i < node.childNodes.length; i++) {
+                                findTextNodes(node.childNodes[i]);
+                            }
                         }
                     }
                     findTextNodes(firstElement);
                     if (textNodes.length > 0) {
-                        targetNode = textNodes[0]; // Take the first non-empty text node found
+                        targetNode = textNodes[0];
                     }
                 }
             }
         }
-
-
         if (targetNode && targetNode.nodeType === Node.TEXT_NODE) {
             let textContent = targetNode.textContent;
-            // Use regex to find and remove leading number and dot (e.g., "1. ", " 2. ")
             const numberPrefixRegex = /^\s*\d+\.\s*/;
             if (numberPrefixRegex.test(textContent)) {
                 targetNode.textContent = textContent.replace(numberPrefixRegex, '');
             }
         }
-
-        // Return the modified HTML string
         return tempDiv.innerHTML;
     }
 
     // --- 명언 관련 함수 ---
     /**
-     * Get a random quote from the quotes array.
-     * @returns {string} A random quote.
+     * quotes 배열에서 무작위 명언을 반환합니다.
+     * @returns {string} 무작위 명언 또는 오류 메시지
      */
     function getRandomQuote() {
-        // Ensure quotes array is loaded from quotes.js
-        if (typeof quotes === 'undefined' || quotes.length === 0) {
-             console.error("Quotes data not loaded or empty.");
-             return "명언 데이터를 불러오지 못했습니다.";
+        if (typeof quotes === 'undefined' || !Array.isArray(quotes) || quotes.length === 0) {
+             console.error("명언 데이터(quotes.js)가 로드되지 않았거나 비어 있습니다.");
+             return "명언 데이터를 불러오는 데 실패했습니다.";
         }
         const randomIndex = Math.floor(Math.random() * quotes.length);
         return quotes[randomIndex];
     }
 
     /**
-     * Starts the slot machine-like animation for displaying a quote.
+     * 명언 슬롯머신 애니메이션을 시작합니다.
      */
     function startSlotAnimation() {
-        const animationDuration = 3000; // Animation duration in milliseconds (increased for smoother feel)
-        const frameRate = 70; // Time between quote changes in milliseconds (increased for slower change)
+        if (!quoteDisplayEl || !getQuoteButtonEl) return;
+
+        const animationDuration = 2000;
+        const frameRate = 60;
         const totalFrames = animationDuration / frameRate;
         let currentFrame = 0;
 
-        // Disable the button during animation
         getQuoteButtonEl.disabled = true;
 
-        // Clear any existing interval
-        if (slotAnimationInterval) {
-            clearInterval(slotAnimationInterval);
-        }
+        if (slotAnimationInterval) clearInterval(slotAnimationInterval);
 
-        // Start the animation
         slotAnimationInterval = setInterval(() => {
-            // Rapidly change content with quick fade
-            quoteDisplayEl.style.opacity = 0; // Start fade out
+            quoteDisplayEl.style.transition = 'opacity 0.05s ease-in-out';
+            quoteDisplayEl.style.opacity = 0;
             setTimeout(() => {
-                 quoteDisplayEl.innerHTML = `<p>${getRandomQuote()}</p>`; // Change content
-                 quoteDisplayEl.style.opacity = 1; // Start fade in
-            }, 100); // Short delay for fade out
+                 quoteDisplayEl.innerHTML = `<p>${getRandomQuote()}</p>`;
+                 quoteDisplayEl.style.opacity = 1;
+            }, 50);
 
             currentFrame++;
-
             if (currentFrame >= totalFrames) {
-                // Animation finished, stop interval and display the final quote
                 clearInterval(slotAnimationInterval);
-                slotAnimationInterval = null; // Reset interval ID
+                slotAnimationInterval = null;
                 displayFinalQuote();
             }
         }, frameRate);
     }
 
     /**
-     * Displays the final random quote after the animation.
+     * 애니메이션 후 최종 명언을 부드럽게 표시합니다.
      */
     function displayFinalQuote() {
+        if (!quoteDisplayEl || !getQuoteButtonEl) return;
         const finalQuote = getRandomQuote();
-        // Ensure final quote fades in smoothly
-        quoteDisplayEl.style.opacity = 0; // Fade out current (last animated) quote
+        const fadeOutDuration = 100;
+        const fadeInDuration = 500;
+
+        quoteDisplayEl.style.transition = `opacity ${fadeOutDuration}ms ease-in-out`;
+        quoteDisplayEl.style.opacity = 0;
+
         setTimeout(() => {
-            quoteDisplayEl.innerHTML = `<p>${finalQuote}</p>`; // Set final quote
-            quoteDisplayEl.style.opacity = 1; // Fade in final quote
-             // Re-enable the button after the final fade-in completes
+            quoteDisplayEl.innerHTML = `<p>${finalQuote}</p>`;
+            quoteDisplayEl.style.transition = `opacity ${fadeInDuration}ms ease-in-out`;
+            quoteDisplayEl.style.opacity = 1;
             setTimeout(() => {
                  getQuoteButtonEl.disabled = false;
-            }, 500); // Match the CSS transition duration for fade-in
-        }, 300); // Match the fadeOutDelay used in displayResultTextSmoothly, or adjust as needed
+                 quoteDisplayEl.style.transition = 'opacity 0.1s ease-in-out';
+            }, fadeInDuration);
+        }, fadeOutDuration);
     }
 
 
-    // --- Page Transition Functions ---
+    // --- 페이지 전환 함수 ---
 
-    // Show the initial page
+    // 초기 화면 표시
     function showInitialPage() {
-        // Hide all other content areas and buttons first
-        hideContentArea(emotionTestAreaEl);
-        hideContentArea(quotePageEl);
-        hideButtonContainer(startButtonEl);
-        hideButtonContainer(answerButtonsEl);
-        hideButtonContainer(resultButtonsEl);
-        hideButtonContainer(emotionButtonsEl);
-        hideButtonContainer(quotePageButtonsEl);
-
-
-        // Show initial page elements
-        showContentArea(initialPageEl, 'flex'); // Show initial page container
-        // Fade in text elements and buttons within the initial page
+        hideElementSmoothly(emotionTestAreaEl);
+        hideElementSmoothly(quotePageEl);
+        showElementSmoothly(initialPageEl, 'flex');
         setTimeout(() => {
-             initialPageEl.querySelectorAll('.fade-element').forEach(el => el.classList.add('visible'));
-             showButtonContainer(initialButtonsEl, 'flex');
-        }, 100); // Short delay after initial page container fade-in starts
+            if (initialPageEl) {
+                 initialPageEl.querySelectorAll('.fade-element').forEach(el => el.classList.add('visible'));
+                 if (initialButtonsEl) {
+                     // *** FIX: 초기 화면 버튼 표시 로직 수정 ***
+                     initialButtonsEl.style.opacity = 0; // 시작 시 투명
+                     initialButtonsEl.classList.remove('visible');
+                     initialButtonsEl.style.display = 'block'; // display 설정
+                     // 잠시 후 visible 클래스 추가하여 fade-in
+                     setTimeout(() => {
+                         initialButtonsEl.classList.add('visible');
+                         initialButtonsEl.style.opacity = 1;
+                     }, 50); // 짧은 지연
+                 }
+            }
+        }, 100);
     }
 
 
-    // Show the emotion test start page
+    // 감정 테스트 시작 화면 표시
     function showEmotionTestStart() {
-        // Hide all other areas
-        hideContentArea(initialPageEl);
-        hideContentArea(quotePageEl);
-        hideButtonContainer(initialButtonsEl);
-        hideButtonContainer(quotePageButtonsEl);
+        hideElementSmoothly(initialPageEl);
+        hideElementSmoothly(quotePageEl);
 
-
-        // Reset emotion test state
-        selectedTree = null;
+        // 상태 초기화
+        selectedEmotionKey = null;
         currentNode = null;
         answers = [];
         currentResultSections = [];
         currentSectionIndex = 0;
-        resultTextAreaEl.innerHTML = ''; // Clear result text
+        if (resultTextAreaEl) resultTextAreaEl.innerHTML = '';
+        if (resultTextAreaEl) resultTextAreaEl.style.opacity = 0;
+        hideElementSmoothly(resultEl);
+        hideElementSmoothly(resultButtonsEl);
 
 
-        // Show emotion test area
-        showContentArea(emotionTestAreaEl, 'flex'); // Show emotion test area container
-
-        // Fade in emotion test start elements
+        showElementSmoothly(emotionTestAreaEl, 'flex');
         setTimeout(() => {
-            // Ensure display is set before adding visible class for fade-in
-            titleEl.style.display = 'block';
-            descriptionEl.style.display = 'block';
-            // startButtonEl.style.display = 'flex'; // Handled by showButtonContainer
-
-            // Add visible class after a short delay to trigger fade-in
-            setTimeout(() => {
-                titleEl.classList.add('visible');
-                descriptionEl.classList.add('visible');
-                showButtonContainer(startButtonEl, 'flex'); // Show start button container
-            }, 50); // Short delay
-        }, 100); // Short delay after emotion test area fade-in starts
+            if (titleEl) showElementSmoothly(titleEl, 'block');
+            if (descriptionEl) showElementSmoothly(descriptionEl, 'block');
+            if (startButtonEl) showElementSmoothly(startButtonEl, 'flex');
+        }, 100);
     }
 
-    // Show the quote page
+    // 명언 페이지 표시
     function showQuotePage() {
-        // Hide all other areas
-        hideContentArea(initialPageEl);
-        hideContentArea(emotionTestAreaEl);
-        hideButtonContainer(initialButtonsEl);
-        hideButtonContainer(startButtonEl);
-        hideButtonContainer(answerButtonsEl);
-        hideButtonContainer(resultButtonsEl);
-        hideButtonContainer(emotionButtonsEl);
+        hideElementSmoothly(initialPageEl);
+        hideElementSmoothly(emotionTestAreaEl);
 
+        if (slotAnimationInterval) clearInterval(slotAnimationInterval);
+        if (getQuoteButtonEl) getQuoteButtonEl.disabled = false;
+        if (quoteDisplayEl) quoteDisplayEl.innerHTML = '<p>버튼을 눌러 오늘의 명언을 확인하세요!</p>';
+        if (quoteDisplayEl) quoteDisplayEl.style.opacity = 1;
 
-        // Reset quote page state
-        if (slotAnimationInterval) {
-            clearInterval(slotAnimationInterval);
-            slotAnimationInterval = null;
-        }
-        getQuoteButtonEl.disabled = false;
-        quoteDisplayEl.innerHTML = '<p>버튼을 눌러 오늘의 명언을 확인하세요!</p>'; // Reset quote display
-
-
-        // Show quote page
-        showContentArea(quotePageEl, 'flex'); // Show quote page container
-
-        // Fade in quote page elements
+        showElementSmoothly(quotePageEl, 'flex');
         setTimeout(() => {
-            quotePageEl.querySelectorAll('.fade-element').forEach(el => el.classList.add('visible')); // Fade in title etc.
-            // Fade in the buttons on the quote page
-             showButtonContainer(quotePageButtonsEl, 'flex');
-        }, 100); // Short delay after quote page container fade-in starts
+            if (quotePageEl && quotePageEl.querySelector('h1')) {
+                 quotePageEl.querySelector('h1').classList.add('visible');
+            }
+            if (quotePageButtonsEl) showElementSmoothly(quotePageButtonsEl, 'flex');
+        }, 100);
     }
 
 
-    // --- Emotion Test Functions ---
+    // --- 감정 테스트 함수 ---
 
-    // Start the test: Hide emotion test start, show emotion choice
+    // OK 버튼 클릭 -> 감정 선택 화면 표시
     function chooseEmotion() {
-        console.log('chooseEmotion called'); // Debugging log
-        // Fade out emotion test start elements
-        titleEl.classList.remove('visible');
-        descriptionEl.classList.remove('visible');
-        hideButtonContainer(startButtonEl); // Hide start button container immediately
-
+        hideElementSmoothly(titleEl);
+        hideElementSmoothly(descriptionEl);
+        hideElementSmoothly(startButtonEl);
 
         setTimeout(() => {
-            // Hide emotion test start elements after fade out
-            titleEl.style.display = 'none';
-            descriptionEl.style.display = 'none';
-            // startButtonEl.style.display = 'none'; // Handled by hideButtonContainer
-
-
-            // Clear previous result stuff
-            resultTextAreaEl.innerHTML = '';
-            hideButtonContainer(resultButtonsEl); // Hide result buttons
-            resultEl.classList.remove('visible');
-            resultEl.style.display = 'none'; // Ensure result area is hidden
-
-
-            // Show emotion choice div and its buttons div
-            emotionChoiceEl.style.display = 'block'; // emotionChoiceEl is block
-            showButtonContainer(emotionButtonsEl, 'flex'); // Show emotion choice buttons container
-
-
-            // Fade in emotion choice div and its buttons div
-            setTimeout(() => {
-                emotionChoiceEl.classList.add('visible');
-                // emotionButtonsEl.classList.add('visible'); // Handled by showButtonContainer
-            }, 50); // Short delay before adding visible class
-
-        }, 500); // Match CSS transition duration for fade out
+            if (emotionChoiceEl) showElementSmoothly(emotionChoiceEl, 'block');
+            if (emotionButtonsEl) showElementSmoothly(emotionButtonsEl, 'flex');
+        }, 500);
     }
 
-    // Emotion selected: Hide emotion choice, show first question
-    function selectEmotion(emotion) {
-      selectedTree = questionTree[emotion];
-      currentNode = selectedTree;
-      answers = []; // Reset answers for the new emotion
+    // 감정 선택 -> 첫 질문 표시
+    function selectEmotion(emotionKey) {
+      if (typeof questionTree === 'undefined' || !questionTree[emotionKey]) {
+          console.error(`'${emotionKey}'에 대한 질문 트리를 찾을 수 없습니다.`);
+          return;
+      }
+      selectedEmotionKey = emotionKey;
+      currentNode = questionTree[emotionKey];
+      answers = [];
 
-      // Fade out emotion choice elements
-      emotionChoiceEl.classList.remove('visible');
-      hideButtonContainer(emotionButtonsEl); // Hide emotion choice buttons immediately
-
+      hideElementSmoothly(emotionChoiceEl);
+      hideElementSmoothly(emotionButtonsEl);
 
       setTimeout(() => {
-          // Hide emotion choice elements after fade out
-          emotionChoiceEl.style.display = 'none';
-          // emotionButtonsEl.style.display = 'none'; // Handled by hideButtonContainer
-
-          // Show question element
-          questionEl.style.display = 'block';
-          // Show answer buttons (fixed)
-          showButtonContainer(answerButtonsEl, 'flex'); // Show answer buttons container
-
-
-          // Fade in question element and answer buttons
-          setTimeout(() => {
-               questionEl.classList.add('visible');
-               // answerButtonsEl.classList.add('visible'); // Handled by showButtonContainer
-               displayQuestion(); // Set the first question text
-          }, 50); // Short delay before adding visible class
-
-      }, 500); // Wait for fade out
+          if (questionEl) showElementSmoothly(questionEl, 'flex');
+          if (answerButtonsEl) showElementSmoothly(answerButtonsEl, 'flex');
+          displayQuestion();
+      }, 500);
     }
 
-    // Display the current question
+    // 현재 질문 표시
     function displayQuestion() {
-      if (currentNode && currentNode.question) {
-        questionEl.innerText = currentNode.question;
-        // Ensure question element is visible (it might have been faded out)
-        if (!questionEl.classList.contains('visible')) {
-            questionEl.style.display = 'block';
-            setTimeout(() => questionEl.classList.add('visible'), 50);
-        }
-         // Ensure answer buttons are visible (fixed)
-        if (!answerButtonsEl.classList.contains('visible')) {
-            answerButtonsEl.style.display = 'flex'; // Fixed position, set display to flex explicitly
-            setTimeout(() => answerButtonsEl.classList.add('visible'), 50);
-        }
+      if (!questionEl) return;
 
+      if (currentNode && currentNode.question) {
+        questionEl.style.opacity = 0;
+        setTimeout(() => {
+            questionEl.innerText = currentNode.question;
+            questionEl.style.opacity = 1;
+        }, 300);
+
+        if (answerButtonsEl && !answerButtonsEl.classList.contains('visible')) {
+            showElementSmoothly(answerButtonsEl, 'flex');
+        }
       } else {
-        // No more questions, calculate and show the result
         calculateResult();
       }
     }
 
-    // Handle user's answer (Yes/No)
+    // 답변 처리 (Yes/No)
     function handleAnswer(answer) {
-      if (currentNode && currentNode[answer]) {
+      if (!currentNode) return;
+
+      const nextNode = currentNode[answer];
+
+      if (nextNode !== undefined) {
         answers.push(answer);
-        currentNode = currentNode[answer];
+        currentNode = nextNode;
 
-        // Fade out current question and answer buttons
-        questionEl.classList.remove('visible');
-        hideButtonContainer(answerButtonsEl); // Hide answer buttons immediately
-
-
-        setTimeout(() => {
-            // Hide elements after fade out
-            questionEl.style.display = 'none';
-            // answerButtonsEl.style.display = 'none'; // Handled by hideButtonContainer
-
-
-            // Check if there's a next question before fading in
-            if (currentNode && currentNode.question) {
-                 displayQuestion(); // Update text and fade in question and answer buttons
-            } else {
-                // No more questions, transition to result
-                // Fade in the result element within the emotion test area
-                resultEl.style.display = 'block'; // Result is block within flex container
-                setTimeout(() => resultEl.classList.add('visible'), 50);
-                calculateResult(); // Calculate and display the result text
-            }
-        }, 500); // Wait for fade out
+        if (currentNode && currentNode.question) {
+            displayQuestion();
+        } else {
+            hideElementSmoothly(questionEl);
+            hideElementSmoothly(answerButtonsEl);
+            setTimeout(() => {
+                showElementSmoothly(resultEl, 'block');
+                calculateResult();
+            }, 500);
+        }
+      } else {
+          console.error("정의되지 않은 답변 경로입니다:", answer);
       }
     }
 
-    // Calculate and display the final result
+    // 최종 결과 계산 및 표시
     function calculateResult() {
-      // Hide question and answer elements if they are still visible
-      questionEl.classList.remove('visible');
-      hideButtonContainer(answerButtonsEl); // Ensure fixed answer buttons are hidden
-
-      setTimeout(() => {
-          questionEl.style.display = 'none';
-          // answerButtonsEl.style.display = 'none'; // Handled by hideButtonContainer
-      }, 500);
-
-      // 현재 선택된 감정과 답변 경로를 가져옵니다.
-      const emotion = Object.keys(questionTree).find(key => questionTree[key] === selectedTree);
       const path = answers.join('-');
+      let fullResultHTML = "<p>결과를 불러오는 중 오류가 발생했습니다.</p>";
 
-      // results_data.js 파일의 resultTexts 객체에서 해당 감정과 경로의 결과 텍스트를 가져옵니다.
-      let fullResultHTML = "<p>결과를 불러오지 못했습니다.</p>"; // 기본 오류 메시지 (HTML 형식)
-
-      // resultTexts 객체가 로드되었는지, 그리고 해당 감정과 경로의 데이터가 존재하는지 확인
-      if (typeof resultTexts !== 'undefined' && resultTexts[emotion] && resultTexts[emotion][path]) {
-          fullResultHTML = resultTexts[emotion][path];
+      if (typeof resultTexts !== 'undefined' && selectedEmotionKey && resultTexts[selectedEmotionKey] && resultTexts[selectedEmotionKey][path]) {
+          fullResultHTML = resultTexts[selectedEmotionKey][path];
+      } else {
+          console.error(`결과 텍스트를 찾을 수 없습니다: 감정='${selectedEmotionKey}', 경로='${path}'`);
       }
 
-      // 결과 HTML을 <hr> 태그를 기준으로 섹션으로 분할합니다.
-      // 각 섹션의 시작 부분에 <hr>이 있을 수 있으므로, 첫 번째 요소는 건너뛰거나 처리해야 할 수 있습니다.
-      // 여기서는 <hr>로 분할하고 각 섹션의 앞뒤 공백을 제거합니다.
       const sections = fullResultHTML.split('<hr>').map(section => section.trim()).filter(section => section.length > 0);
-
-      // 분할된 각 섹션에서 아라비아 숫자를 제거합니다.
       currentResultSections = sections.map(sectionHTML => processResultSectionHTML(sectionHTML));
-      currentSectionIndex = 0; // 첫 번째 섹션부터 시작
+      currentSectionIndex = 0;
 
-      // 결과 영역은 이미 showContentArea에서 visible 처리됨.
-      // 이제 결과 텍스트 영역에 첫 번째 섹션을 부드러운 페이드 인 애니메이션으로 표시합니다.
-      displayResultTextSmoothly(resultTextAreaEl, currentResultSections[currentSectionIndex], () => {
-           // 텍스트 표시 완료 후 결과 버튼 컨테이너를 보이게 합니다.
-           showButtonContainer(resultButtonsEl, 'flex'); // Show result buttons container
-           updateResultButtons(); // 버튼 상태 업데이트
+      displayResultTextSmoothly(resultTextAreaEl, currentResultSections[currentSectionIndex] || "<p>결과 내용이 없습니다.</p>", () => {
+           showElementSmoothly(resultButtonsEl, 'flex');
+           updateResultButtons();
       });
     }
 
-    // 특정 결과 섹션을 표시하는 함수 (부드러운 페이드 인)
+    // 특정 결과 섹션 표시
     function displayResultSection(index) {
         if (index >= 0 && index < currentResultSections.length) {
-            // 현재 섹션을 resultTextAreaEl에 부드러운 페이드 인 애니메이션으로 표시
+            currentSectionIndex = index;
             displayResultTextSmoothly(resultTextAreaEl, currentResultSections[index], () => {
-                // 텍스트 표시 완료 후 버튼 상태 업데이트
-                currentSectionIndex = index; // 인덱스 업데이트는 애니메이션 완료 후
                 updateResultButtons();
             });
         }
     }
 
-    // 결과 페이지네이션 버튼 상태를 업데이트하는 함수
+    // 결과 페이지네이션 버튼 상태 업데이트
     function updateResultButtons() {
-        // 이전 버튼 상태
-        if (currentSectionIndex > 0) {
-            prevButtonEl.style.display = 'inline-block';
-        } else {
-            prevButtonEl.style.display = 'none';
-        }
+        if (!prevButtonEl || !nextButtonEl || !restartButtonEl) return;
 
-        // 다음 버튼 상태
+        prevButtonEl.style.display = (currentSectionIndex > 0) ? 'inline-block' : 'none';
+
         if (currentSectionIndex < currentResultSections.length - 1) {
             nextButtonEl.style.display = 'inline-block';
-            restartButtonEl.style.display = 'none'; // 다음 버튼이 있으면 재시작 버튼 숨김
+            restartButtonEl.style.display = 'none';
         } else {
-            nextButtonEl.style.display = 'none'; // 마지막 섹션이면 다음 버튼 숨김
-            restartButtonEl.style.display = 'inline-block'; // 마지막 섹션이면 재시작 버튼 표시
+            nextButtonEl.style.display = 'none';
+            restartButtonEl.style.display = 'inline-block';
         }
 
-        // 재시작 버튼은 마지막 섹션에서만 표시되므로 위에서 처리
-        // prevButton과 nextButton이 모두 숨겨지면 (섹션이 1개 이하), restartButton만 보이게 됨.
         if (currentResultSections.length <= 1) {
              prevButtonEl.style.display = 'none';
              nextButtonEl.style.display = 'none';
@@ -1002,68 +973,47 @@
     }
 
 
-    // 결과 페이지네이션 탐색 함수
+    // 결과 페이지네이션 이동
     function navigateResult(direction) {
         const newIndex = currentSectionIndex + direction;
         displayResultSection(newIndex);
     }
 
 
-    // Restart the test: Hide result, show initial screen
+    // 테스트 다시 시작 -> 초기 화면으로
     function restartTest() {
-        // Fade out result elements
-        resultEl.classList.remove('visible');
-        hideButtonContainer(resultButtonsEl); // Hide result buttons container immediately
+        hideElementSmoothly(resultEl);
+        hideElementSmoothly(resultButtonsEl);
 
         setTimeout(() => {
-            // Hide elements after fade out
-            resultEl.style.display = 'none'; // Hide result area
-            // resultButtonsEl.style.display = 'none'; // Handled by hideButtonContainer
-
-            // Reset state variables
-            selectedTree = null;
-            currentNode = null;
-            answers = [];
-            currentResultSections = []; // 결과 섹션 배열 초기화
-            currentSectionIndex = 0; // 인덱스 초기화
-
-
-            // Hide emotion test specific elements that might still be visible
-            emotionChoiceEl.style.display = 'none';
-            questionEl.style.display = 'none';
-            answerButtonsEl.style.display = 'none'; // Ensure fixed answer buttons are hidden
-            emotionChoiceEl.classList.remove('visible');
-            questionEl.classList.remove('visible');
-            answerButtonsEl.classList.remove('visible');
-
-            // Go back to the initial page
+            hideElementSmoothly(emotionChoiceEl);
+            hideElementSmoothly(questionEl);
+            hideElementSmoothly(answerButtonsEl);
             showInitialPage();
-
-        }, 500); // Wait for fade out
+        }, 500);
     }
 
     // --- Initial Load ---
     window.onload = () => {
-        // Initially hide all main content areas and button containers using CSS display: none
-        // This is already set in CSS, so no need to explicitly set here on load.
-        // Just ensure opacity is 0 for fade-in.
-        initialPageEl.style.opacity = 0;
-        emotionTestAreaEl.style.opacity = 0;
-        quotePageEl.style.opacity = 0;
+        if (initialPageEl) initialPageEl.style.opacity = 0;
+        if (emotionTestAreaEl) emotionTestAreaEl.style.opacity = 0;
+        if (quotePageEl) quotePageEl.style.opacity = 0;
 
         const allButtonContainers = document.querySelectorAll('.buttons, .pagination-buttons');
         allButtonContainers.forEach(container => {
              container.style.opacity = 0;
+             container.style.display = 'none';
         });
 
-
-        // Then show the initial page
         showInitialPage();
     };
 
     // --- Event Listeners ---
-    getQuoteButtonEl.addEventListener('click', startSlotAnimation);
-
+    if (getQuoteButtonEl) {
+        getQuoteButtonEl.addEventListener('click', startSlotAnimation);
+    } else {
+        console.warn("ID 'get-quote-button' 요소를 찾을 수 없습니다.");
+    }
 
   </script>
 </body>
